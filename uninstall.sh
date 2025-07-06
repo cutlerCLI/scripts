@@ -5,6 +5,24 @@ set -e
 BINARY="cutler"
 INSTALL_DIR="/usr/local/bin"
 MANPAGE_DIR="/usr/local/share/man/man1"
+OS="$(uname -s)"
+ARCH="$(uname -m)"
+
+# Only macOS is supported
+if [[ "$OS" != "Darwin" ]]; then
+  echo "❌ This script can only run on macOS. Detected: $OS"
+  exit 1
+fi
+
+# Determine ARCH_PREFIX based on architecture
+if [[ "$ARCH" == "x86_64" ]]; then
+  ARCH_PREFIX="x86_64"
+elif [[ "$ARCH" == "arm64" ]]; then
+  ARCH_PREFIX="arm64"
+else
+  echo "❌ Unsupported architecture: $ARCH"
+  exit 1
+fi
 
 echo "🔒 Uninstalling $BINARY binary from $INSTALL_DIR..."
 if [ -f "$INSTALL_DIR/$BINARY" ]; then
